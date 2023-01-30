@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "570578872773",
+    "project_id": "abora-39351",
+    "storage_bucket": "abora-39351.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570578872773:android:6a2e8d4933d5e94e42c3ac",
+        "android_client_info": {
+          "package_name": "com.example.abora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570578872773-ijalm6nvpofe29i83i0c8he5t6htn4mg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.abora",
+            "certificate_hash": "e0905f70a72fb49ce11af96d1eb131dd2c304562"
+          }
+        },
+        {
+          "client_id": "570578872773-vgbvi7s98no75oiggtjpus39rhjm5c0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnGx1qW3ajxcCpa1AvKCijLqP6_IRB9kc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "570578872773-jsor41f67ai7llbn4as0e78aj04pqdca.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
