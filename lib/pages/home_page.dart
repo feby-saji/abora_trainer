@@ -1,16 +1,15 @@
 import 'package:abora/constants/app_styles.dart';
+import 'package:abora/constants/widgets.dart';
 import 'package:abora/functions/DB/db_functions.dart';
-import 'package:abora/main.dart';
 import 'package:abora/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 int lastDay = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
-ValueNotifier<List<DateTime>> specialDates = ValueNotifier([]);
+List<DateTime> specialDates = [];
 List<DateTime> blackOutDates = [
-  DateTime.now(),
-  DateTime.now().add(Duration(days: 1)),
+  DateTime.now().add(const Duration(days: 2)),
+  DateTime.now().add(const Duration(days: 1)),
 ];
 
 class HomeScreen extends StatefulWidget {
@@ -215,62 +214,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Align(
                 alignment: Alignment.bottomCenter,
-                child: calendar(specialDates: _specialDates),
+                child: Calendar(specialDates: _specialDates),
               )
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class calendar extends StatefulWidget {
-  const calendar({
-    Key? key,
-    required List<DateTime> specialDates,
-  }) : super(key: key);
-
-  @override
-  State<calendar> createState() => _calendarState();
-}
-
-class _calendarState extends State<calendar> {
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: specialDates,
-      builder: (context, value, child) {
-        return SfDateRangePicker(
-          view: DateRangePickerView.month,
-          minDate: DateTime(DateTime.now().year, DateTime.now().month),
-          maxDate: DateTime(DateTime.now().year, DateTime.now().month, lastDay),
-          monthViewSettings: DateRangePickerMonthViewSettings(
-            specialDates: value,
-            showTrailingAndLeadingDates: true,
-            blackoutDates: blackOutDates,
-          ),
-          monthCellStyle: DateRangePickerMonthCellStyle(
-            blackoutDatesDecoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(width: 1),
-              color: Colors.red,
-            ),
-            blackoutDateTextStyle: const TextStyle(),
-            specialDatesDecoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(width: 1),
-              color: Colors.green,
-            ),
-            specialDatesTextStyle: const TextStyle(color: Colors.black),
-            cellDecoration: const BoxDecoration(shape: BoxShape.circle),
-            todayTextStyle: const TextStyle(color: Colors.black),
-            trailingDatesDecoration: const BoxDecoration(
-                shape: BoxShape.rectangle, color: Colors.blue),
-          ),
-          todayHighlightColor: Colors.orange,
-        );
-      },
     );
   }
 }

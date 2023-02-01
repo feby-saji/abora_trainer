@@ -21,8 +21,7 @@ void main() async {
     prefs.getStringList(SharedPrefVal().availableSession)!.forEach((element) {
       var stringDate = element;
       DateTime parsedDate = DateTime.parse(stringDate);
-      specialDates.value.add(parsedDate);
-      specialDates.notifyListeners();
+      specialDates.add(parsedDate);
     });
   } else {}
   await Firebase.initializeApp(

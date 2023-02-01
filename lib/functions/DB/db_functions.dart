@@ -53,8 +53,7 @@ class DbServices {
       prefs.getStringList(SharedPrefVal().availableSession)!.forEach((element) {
         var stringDate = element;
         DateTime parsedDate = DateTime.parse(stringDate);
-        specialDates.value.add(parsedDate);
-        specialDates.notifyListeners();
+        specialDates.add(parsedDate);
       });
     } else {
       List<String> list = [];
@@ -65,8 +64,7 @@ class DbServices {
                 List.from(value.data()!['availableSessions']).forEach((dbDate) {
                   DateTime date = DateTime.fromMicrosecondsSinceEpoch(
                       dbDate.microsecondsSinceEpoch);
-                  specialDates.value.add(date);
-                  specialDates.notifyListeners();
+                  specialDates.add(date);
                   list.add(date.toString());
                 }),
               }
@@ -88,6 +86,10 @@ class DbServices {
         .doc(DbServices().uid)
         .update({'availableSessions': dates});
     await prefs.setStringList(SharedPrefVal().availableSession, list);
+  }
+
+  saveTrainerDetails() async {
+    trainersCollection.doc(uid).update({});
   }
 
 // on new trainer singUp
@@ -122,7 +124,6 @@ class DbServices {
     }
   }
 }
-
 
 //  ElevatedButton(
 //             onPressed: () async {
