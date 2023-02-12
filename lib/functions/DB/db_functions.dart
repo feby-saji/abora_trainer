@@ -1,4 +1,5 @@
 import 'package:abora/constants/vars.dart';
+import 'package:abora/main.dart';
 import 'package:abora/models/new_trainer.dart';
 import 'package:abora/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,48 +10,144 @@ class DbServices {
   final userNameCollection = FirebaseFirestore.instance.collection('userNames');
   final trainersCollection = FirebaseFirestore.instance.collection('Trainers');
   final uid = FirebaseAuth.instance.currentUser!.uid;
-  late SharedPreferences sharedPref;
+  SharedPreferences? sharedPref;
 
+// document snapshot
+  Future fillDocSnap() async {
+    print('getting docSnap inside Dbservices');
+    docSnap = await trainersCollection.doc(uid).get();
+  }
+
+// get Trainer Profile Details
   Future<String> getUserName() async {
-    sharedPref = await SharedPreferences.getInstance();
-    if (sharedPref.getString(SharedPrefVal().userName) != null) {
-      return sharedPref.getString(SharedPrefVal().userName)!;
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().userName) != null) {
+      return sharedPref!.getString(SharedPrefVal().userName)!;
     } else {
-      DocumentSnapshot docSnap = await trainersCollection.doc(uid).get();
-      sharedPref.setString(SharedPrefVal().userName, docSnap['name']);
-      return docSnap['name'];
+      sharedPref!.setString(SharedPrefVal().userName, docSnap!['name']);
+      return docSnap!['name'];
+    }
+  }
+
+  Future<String> getAdPosted() async {
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().adPosted) != null) {
+      return sharedPref!.getString(SharedPrefVal().adPosted)!;
+    } else {
+      sharedPref!.setString(SharedPrefVal().adPosted, docSnap!['adPosted']);
+      return docSnap!['adPosted'];
     }
   }
 
   Future<String> getSpecializeIn() async {
-    sharedPref = await SharedPreferences.getInstance();
-    if (sharedPref.getString(SharedPrefVal().specializeIn) != null) {
-      return sharedPref.getString(SharedPrefVal().specializeIn)!;
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().specializeIn) != null) {
+      return sharedPref!.getString(SharedPrefVal().specializeIn)!;
     } else {
-      DocumentSnapshot docSnap = await trainersCollection.doc(uid).get();
-      sharedPref.setString(SharedPrefVal().specializeIn, docSnap['speciality']);
-      return docSnap['speciality'];
+      sharedPref!
+          .setString(SharedPrefVal().specializeIn, docSnap!['speciality']);
+      return docSnap!['speciality'];
+    }
+  }
+
+  Future<String> getBio() async {
+    if (docSnap == null) {
+      await fillDocSnap();
+      print('getting docSnap inside bio $docSnap');
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().bio) != null) {
+      return sharedPref!.getString(SharedPrefVal().bio)!;
+    } else {
+      sharedPref!.setString(SharedPrefVal().bio, docSnap!['bio']);
+      return docSnap!['bio'];
+    }
+  }
+
+  Future<String> getArea() async {
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().area) != null) {
+      return sharedPref!.getString(SharedPrefVal().area)!;
+    } else {
+      sharedPref!.setString(SharedPrefVal().area, docSnap!['area']);
+      return docSnap!['area'];
+    }
+  }
+
+  Future<String> getsessionPrice() async {
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().sessionPrice) != null) {
+      return sharedPref!.getString(SharedPrefVal().sessionPrice)!;
+    } else {
+      sharedPref!
+          .setString(SharedPrefVal().sessionPrice, docSnap!['pricePerSession']);
+      return docSnap!['pricePerSession'];
     }
   }
 
   Future<String> getimgUrl() async {
-    sharedPref = await SharedPreferences.getInstance();
-    if (sharedPref.getString(SharedPrefVal().trainerImgUrl) != null) {
-      return sharedPref.getString(SharedPrefVal().trainerImgUrl)!;
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getString(SharedPrefVal().trainerImgUrl) != null) {
+      return sharedPref!.getString(SharedPrefVal().trainerImgUrl)!;
     } else {
-      DocumentSnapshot docSnap = await trainersCollection.doc(uid).get();
-      sharedPref.setString(
-          SharedPrefVal().trainerImgUrl, docSnap['profielPic']);
-      return docSnap['profielPic'];
+      sharedPref!
+          .setString(SharedPrefVal().trainerImgUrl, docSnap!['profilePic']);
+      return docSnap!['profilePic'];
+    }
+  }
+
+  Future<bool> getHomeTrainingBool() async {
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getBool(SharedPrefVal().home) != null) {
+      return sharedPref!.getBool(SharedPrefVal().home)!;
+    } else {
+      sharedPref!.setBool(SharedPrefVal().home, docSnap!['homeTraining']);
+      return docSnap!['homeTraining'];
+    }
+  }
+
+  Future<bool> getGymTrainingBool() async {
+    if (docSnap == null) {
+      await fillDocSnap();
+    }
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getBool(SharedPrefVal().gym) != null) {
+      return sharedPref!.getBool(SharedPrefVal().gym)!;
+    } else {
+      sharedPref!.setBool(SharedPrefVal().gym, docSnap!['gymTraining']);
+      return docSnap!['gymTraining'];
     }
   }
 
   Future getAvailableSessions() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getStringList(SharedPrefVal().availableSession) != null) {
-      // await prefs.remove(SharedPrefVal().availableSession);
-      print('shared has dates getting it');
-      prefs.getStringList(SharedPrefVal().availableSession)!.forEach((element) {
+    specialDates.clear();
+    sharedPref ??= await SharedPreferences.getInstance();
+    if (sharedPref!.getStringList(SharedPrefVal().availableSession) != null) {
+      // await sharedPref.remove(SharedPrefVal().availableSession);
+      sharedPref!
+          .getStringList(SharedPrefVal().availableSession)!
+          .forEach((element) {
         var stringDate = element;
         DateTime parsedDate = DateTime.parse(stringDate);
         specialDates.add(parsedDate);
@@ -69,13 +166,13 @@ class DbServices {
                 }),
               }
           });
-      await prefs.setStringList(SharedPrefVal().availableSession, list);
+      await sharedPref!.setStringList(SharedPrefVal().availableSession, list);
     }
   }
 
 //  functions set to DB
   setSessionsAvailable(dates) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    sharedPref ??= await SharedPreferences.getInstance();
     List<String> list = [];
     List.from(dates).forEach((element) {
       list.add(element.toString());
@@ -85,28 +182,53 @@ class DbServices {
         .trainersCollection
         .doc(DbServices().uid)
         .update({'availableSessions': dates});
-    await prefs.setStringList(SharedPrefVal().availableSession, list);
+    await sharedPref!.setStringList(SharedPrefVal().availableSession, list);
+    list.clear();
   }
 
-  saveTrainerDetails() async {
-    trainersCollection.doc(uid).update({});
+  Future<bool> saveTrainerDetails(
+      {required bio,
+      required area,
+      required sessionPrice,
+      required String specializeIn,
+      required bool home,
+      required bool gym}) async {
+    sharedPref ??= await SharedPreferences.getInstance();
+    trainersCollection.doc(uid).update({
+      'bio': bio,
+      'area': area,
+      'pricePerSession': sessionPrice,
+      'speciality': specializeIn,
+      'gymTraining': gym,
+      'homeTraining': home,
+    });
+    await sharedPref!.setString(SharedPrefVal().bio, bio);
+    await sharedPref!.setString(SharedPrefVal().area, area);
+    await sharedPref!
+        .setString(SharedPrefVal().sessionPrice, sessionPrice.text);
+    await sharedPref!.setString(SharedPrefVal().specializeIn, specializeIn);
+    await sharedPref!.setBool(SharedPrefVal().gym, gym);
+    await sharedPref!.setBool(SharedPrefVal().home, home);
+    return true;
   }
 
 // on new trainer singUp
   addNewTrainer(name) async {
     final newTrainer = NewTrainer(
       name: name,
-      profielPic: '',
+      profilePic:
+          'https://cyclingmagazine.ca/wp-content/uploads/2021/08/GettyImages-1213615970.jpg',
       bio: '',
       homeTraining: false,
       gymTraining: false,
       availableSessions: [],
       bookedSessions: [],
-      area: 9000,
+      area: '9000',
       speciality: '',
-      pricePerSession: 10,
-      reviews: [],
+      pricePerSession: '10',
       adPosted: false,
+      adPostable: false,
+      createdOn: DateTime.now(),
     );
     await trainersCollection.doc(uid).set(newTrainer.toMap());
   }
@@ -128,8 +250,8 @@ class DbServices {
 //  ElevatedButton(
 //             onPressed: () async {
 //               FirebaseAuth.instance.signOut();
-//               SharedPreferences prefs = await SharedPreferences.getInstance();
-//               await prefs.setBool('userLoggedIn', false);
+//               SharedPreferences sharedPref = await SharedPreferences.getInstance();
+//               await sharedPref.setBool('userLoggedIn', false);
 //               Get.to(() => LoginPage());
 //             },
 //             child: Text('log out')),

@@ -30,6 +30,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cloud_firestore: ^4.3.1
+  cloudinary_public: ^0.20.0
   cupertino_icons: ^1.0.2
   email_validator: ^2.1.17
   firebase_auth: any
@@ -37,14 +38,17 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_firebase_firestore: ^0.0.1
-  flutter_heatmap_calendar: ^1.0.5
+  flutter_native_image: ^0.0.6+1
   get: ^4.6.5
-  google_fonts: ^3.0.1
+  google_fonts: any
   google_sign_in: ^5.4.3
+  http: ^0.13.5
+  image_picker: ^0.8.6+1
   intl: ^0.18.0
+  path_provider: ^2.0.12
   rive: ^0.10.1
   shared_preferences: ^2.0.17
-  syncfusion_flutter_calendar: ^20.4.44
+  showcaseview: ^2.0.0+1
   syncfusion_flutter_datepicker: ^20.4.44
 
 dev_dependencies:

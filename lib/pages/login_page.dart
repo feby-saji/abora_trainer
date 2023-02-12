@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rive/rive.dart' as Rive;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -308,7 +309,8 @@ createUserWithEmail(BuildContext context) async {
       await DbServices().addNewTrainer(userNameCtrl.text);
       await prefs.setBool(SharedPrefVal().userLoggedIn, true);
       Future.delayed(const Duration(seconds: 2), () {
-        Get.to(() => const HomeScreen());
+        Get.to(() => ShowCaseWidget(
+            builder: Builder(builder: (context) => const HomeScreen())));
       });
     }
   } on FirebaseAuthException catch (e) {
@@ -350,7 +352,8 @@ signInUserWithEmail(BuildContext context) async {
     );
     print('loged in success');
     Future.delayed(const Duration(seconds: 2), () {
-      Get.to(() => const HomeScreen());
+      Get.to(() => ShowCaseWidget(
+          builder: Builder(builder: (context) => const HomeScreen())));
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(SharedPrefVal().userLoggedIn, true);
@@ -404,7 +407,8 @@ Future<UserCredential> signInWithGoogle(BuildContext context) async {
     await DbServices()
         .addNewTrainer(FirebaseAuth.instance.currentUser!.displayName);
     Future.delayed(const Duration(seconds: 2), () {
-      Get.to(() => const HomeScreen());
+      Get.to(() => ShowCaseWidget(
+          builder: Builder(builder: (context) => const HomeScreen())));
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(SharedPrefVal().userLoggedIn, true);
@@ -413,7 +417,8 @@ Future<UserCredential> signInWithGoogle(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(SharedPrefVal().userLoggedIn, true);
     Future.delayed(const Duration(seconds: 2), () {
-      Get.to(() => const HomeScreen());
+      Get.to(() => ShowCaseWidget(
+          builder: Builder(builder: (context) => const HomeScreen())));
     });
   }
 

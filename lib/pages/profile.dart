@@ -6,8 +6,10 @@ import 'package:abora/main.dart';
 import 'package:abora/models/review.dart';
 import 'package:abora/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rive/rive.dart';
@@ -46,17 +48,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool _homeTraining = false;
   bool _gymTraining = false;
+
 //   showcase keys
 //   final GlobalKey _formsKey = GlobalKey();
   final GlobalKey _saveKey = GlobalKey();
   final GlobalKey _calendarKey = GlobalKey();
+  final GlobalKey _reviewKey = GlobalKey();
 
   displayshowCase() async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     bool? showCaseBool =
         sharedPref.getBool(SharedPrefVal().displayShowCaseProfile);
     if (showCaseBool != true) {
-      ShowCaseWidget.of(context).startShowCase([_saveKey, _calendarKey]);
+      ShowCaseWidget.of(context)
+          .startShowCase([_saveKey, _calendarKey, _reviewKey]);
       await sharedPref.setBool(SharedPrefVal().displayShowCaseProfile, true);
     } else {
       await sharedPref.setBool(SharedPrefVal().displayShowCaseProfile, true);
@@ -128,7 +133,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   Showcase(
                     key: _saveKey,
                     title: 'save button',
-                    description: 'save when you add your details.',
+                    description:
+                        'save button will appear when you change any values in your profile.',
                     child: ValueListenableBuilder(
                       valueListenable: saveBtnVisible,
                       builder: (context, value, child) {
@@ -213,6 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               setState(() {
                                                 specializeIn = 'Lean body';
                                               });
+                                              saveBtnVisible.value = true;
                                               Get.back();
                                             },
                                             child: Container(
@@ -248,6 +255,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 specializeIn =
                                                     'Muscle building';
                                               });
+                                              saveBtnVisible.value = true;
                                               Get.back();
                                             },
                                             child: Container(
@@ -282,6 +290,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                               setState(() {
                                                 specializeIn = 'Fat loss';
                                               });
+                                              saveBtnVisible.value = true;
+
                                               Get.back();
                                             },
                                             child: Container(
@@ -316,6 +326,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               setState(() {
                                                 specializeIn = 'Weight gain';
                                               });
+                                              saveBtnVisible.value = true;
                                               Get.back();
                                             },
                                             child: Container(
@@ -703,23 +714,31 @@ class _ProfilePageState extends State<ProfilePage> {
 
 //
               Text('Last Review', style: kPoppinsSemiBold),
-              lastReview == null
-                  ? Container(
-                      width: SizeConfig.screenWidth,
-                      height: blkVerSize * 12,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: const Center(child: Text('No Reviews !')),
-                    )
-                  : ReviewWidget(
-                      blkVerSize: blkVerSize,
-                      blkHorSize: blkHorSize,
-                      imgPath: lastReview!.profilePic,
-                      userName: lastReview!.name,
-                      reviewText: lastReview!.text,
-                      dateTime: lastReview!.dateTime,
-                    ),
+              Showcase(
+                key: _reviewKey,
+                title: 'reviews',
+                description: 'recent reviews will be shown here.',
+                child: Container(
+                  child: lastReview == null
+                      ? Container(
+                          width: SizeConfig.screenWidth,
+                          height: blkVerSize * 12,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: const Center(child: Text('No Reviews !')),
+                        )
+                      : ReviewWidget(
+                          blkVerSize: blkVerSize,
+                          blkHorSize: blkHorSize,
+                          imgPath: lastReview!.profilePic,
+                          userName: lastReview!.name,
+                          reviewText: lastReview!.text,
+                          dateTime: lastReview!.dateTime,
+                        ),
+                ),
+              ),
+
               SizedBox(height: blkVerSize * 3),
             ],
           ),
@@ -729,15 +748,58 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> selectImage() async {
+    final navigator = Navigator.of(context);
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(
+              child: SizedBox(
+            width: 300,
+            height: 300,
+            child:
+                // CircularProgressIndicator()
+                RiveAnimation.asset('assets/rive/loading.riv'),
+          ));
+        });
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (xFile == null) return;
+// get file
+    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (xFile == null) {
+      Get.back();
+      return;
+    }
+
     setState(() {
       file = File(xFile.path);
     });
 
-    await sharedPref.setString(SharedPrefVal().profilePic, xFile.path);
+// compresss it
+    File compressedFile = await FlutterNativeImage.compressImage(xFile.path,
+        quality: 80, targetWidth: 500, targetHeight: 500);
+
+// upload
+    final cloudinary = CloudinaryPublic('dgfprpoif', 'jtxhrv2n', cache: false);
+
+    try {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(compressedFile.path,
+            resourceType: CloudinaryResourceType.Image),
+      );
+      DbServices()
+          .trainersCollection
+          .doc(DbServices().uid)
+          .update({'profilePic': response.secureUrl});
+    } on CloudinaryException catch (e) {
+      Get.snackbar('', 'something went wrong $e');
+      print(e.message);
+      print(e.request);
+      navigator.pop();
+    }
+
+    await sharedPref.setString(SharedPrefVal().profilePic, compressedFile.path);
+    navigator.pop();
   }
 
   getLastReview() async {
@@ -745,19 +807,21 @@ class _ProfilePageState extends State<ProfilePage> {
         .collection('Trainers')
         .doc(DbServices().uid)
         .collection('reviews')
-        .limit(1)
+        .limit(3)
         .get();
-    DocumentSnapshot docSnap = querySnap.docs[0];
-    if (mounted) {
-      setState(() {
-        lastReview = TrainerReviewModel(
-          name: docSnap['name'],
-          profilePic: docSnap['profilePic'],
-          text: docSnap['text'],
-          dateTime: DateTime.fromMicrosecondsSinceEpoch(
-              docSnap['dateTime'].microsecondsSinceEpoch),
-        );
-      });
+    if (querySnap.docs.length < 0) {
+      DocumentSnapshot docSnap = querySnap.docs[0];
+      if (mounted) {
+        setState(() {
+          lastReview = TrainerReviewModel(
+            name: docSnap['name'],
+            profilePic: docSnap['profilePic'],
+            text: docSnap['text'],
+            dateTime: DateTime.fromMicrosecondsSinceEpoch(
+                docSnap['dateTime'].microsecondsSinceEpoch),
+          );
+        });
+      }
     }
   }
 

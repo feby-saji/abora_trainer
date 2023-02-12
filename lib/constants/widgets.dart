@@ -1,6 +1,7 @@
 import 'package:abora/constants/app_styles.dart';
 import 'package:abora/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 // Calendar widget
@@ -45,10 +46,12 @@ class Calendar extends StatelessWidget {
 class DescriptionTile extends StatefulWidget {
   final String text;
   final String value;
-  const DescriptionTile({
+  final Color color;
+  DescriptionTile({
     Key? key,
     required this.text,
     required this.value,
+    required this.color,
   }) : super(key: key);
 
   @override
@@ -74,8 +77,8 @@ class _DescriptionTileState extends State<DescriptionTile> {
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text(
           widget.text,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: widget.color,
           ),
         ),
         Text(
@@ -113,11 +116,64 @@ editProfileTextField(BuildContext context, TextEditingController controller,
 }
 
 // trainer last review tile
-class TrainerLastReview extends StatelessWidget {
-  const TrainerLastReview({super.key});
+class ReviewWidget extends StatelessWidget {
+  final String imgPath;
+  final String userName;
+  final String reviewText;
+  final DateTime dateTime;
+  const ReviewWidget({
+    super.key,
+    required this.blkVerSize,
+    required this.blkHorSize,
+    required this.imgPath,
+    required this.userName,
+    required this.reviewText,
+    required this.dateTime,
+  });
+
+  final double blkVerSize;
+  final double blkHorSize;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    var formatter = new DateFormat('dd-MM-yyyy');
+    String formattedDate = formatter.format(dateTime);
+    return Container(
+      width: SizeConfig.screenWidth,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(20)),
+      padding: EdgeInsets.symmetric(
+          vertical: blkVerSize * 1, horizontal: blkHorSize * 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.network(
+                  imgPath,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: blkHorSize * 3),
+              Text(userName, style: kPoppinsMedium),
+            ],
+          ),
+          SizedBox(height: blkVerSize * 1),
+          Text(reviewText),
+          SizedBox(height: blkVerSize * 1),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                formattedDate,
+                style: const TextStyle(color: Colors.grey),
+              ))
+        ],
+      ),
+    );
   }
 }

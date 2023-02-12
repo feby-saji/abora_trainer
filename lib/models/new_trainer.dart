@@ -1,20 +1,21 @@
 class NewTrainer {
   final String name;
-  String profielPic;
+  String profilePic;
   String bio;
   bool homeTraining;
   bool gymTraining;
-  int area;
+  String area;
   String speciality;
-  int pricePerSession;
+  String pricePerSession;
   List availableSessions;
   List bookedSessions;
-  List reviews;
   bool adPosted;
+  bool adPostable;
+  DateTime createdOn;
 
   NewTrainer({
     required this.name,
-    required this.profielPic,
+    required this.profilePic,
     required this.bio,
     required this.homeTraining,
     required this.gymTraining,
@@ -23,14 +24,15 @@ class NewTrainer {
     required this.area,
     required this.speciality,
     required this.pricePerSession,
-    required this.reviews,
     required this.adPosted,
+    required this.adPostable,
+    required this.createdOn,
   });
 
   Map<String, dynamic> toMap() {
     return {
       "name": name,
-      "profielPic": profielPic,
+      "profilePic": profilePic,
       "bio": bio,
       "homeTraining": homeTraining,
       "gymTraining": gymTraining,
@@ -39,7 +41,9 @@ class NewTrainer {
       "area": area,
       "speciality": speciality,
       "pricePerSession": pricePerSession,
-      "reviews": reviews,
+      "adPostable": adPostable,
+      "adPosted": adPosted,
+      "createdOn": createdOn,
     };
   }
 }
