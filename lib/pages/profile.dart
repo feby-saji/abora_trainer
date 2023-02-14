@@ -420,25 +420,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
               //   descriptions
               GestureDetector(
-                onTap: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return editProfileTextField(
-                          inputType: TextInputType.streetAddress,
-                          context: context,
-                          controller: _areaCtrl,
-                          blockSize: blkHorSize,
-                          maxLength: 10,
-                          hintText: 'Postal Code',
-                          particulatVar: 'area');
-                    }),
-                child: DescriptionTile(
-                    text: 'Area',
-                    color: isRed && _area.isEmpty ? Colors.red : Colors.white,
-                    value: _area.isEmpty ? 'tap to add' : _area),
-              ),
-
-              GestureDetector(
                 onTap: () {
                   showDialog(
                       context: context,
@@ -777,7 +758,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 // compresss it
     File compressedFile = await FlutterNativeImage.compressImage(xFile.path,
-        quality: 80, targetWidth: 500, targetHeight: 500);
+        quality: 80, targetWidth: 400, targetHeight: 400);
 
 // upload
     final cloudinary = CloudinaryPublic('dgfprpoif', 'jtxhrv2n', cache: false);
@@ -851,20 +832,16 @@ class _ProfilePageState extends State<ProfilePage> {
               keyboardType: inputType ?? inputType,
               controller: controller,
               inputFormatters: [LengthLimitingTextInputFormatter(maxLength)],
-              initialValue: 'add goal',
               decoration: InputDecoration(
                 hintText: hintText,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Colors.green,
                     width: 2.0,
                   ),
                 ),
                 labelText: 'Goal',
-                suffixIcon: Icon(
-                  Icons.error,
-                ),
               ),
             ),
           ),
