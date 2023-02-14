@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:abora/constants/app_styles.dart';
 import 'package:abora/constants/vars.dart';
 import 'package:abora/constants/widgets.dart';
@@ -75,7 +74,6 @@ class HomeScreenState extends State<HomeScreen> {
 
 // check shared has ImgPath
       if (prefs.getString(SharedPrefVal().profilePic) == null) {
-        print('this thing is running nowwwwwwwwwww');
 // getImgUrl
         DocumentSnapshot snapDoc =
             await DbServices().trainersCollection.doc(DbServices().uid).get();

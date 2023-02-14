@@ -463,7 +463,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         : _pricePerSession),
               ),
 
-              //   home Training
+//   home Training
               GestureDetector(
                 onTap: () => showDialog(
                     context: context,
@@ -552,7 +552,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     value: _homeTraining ? 'Yes' : 'No'),
               ),
 
-              //   GymTraining
+//   GymTraining
               GestureDetector(
                 onTap: () => showDialog(
                     context: context,
@@ -643,7 +643,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
               SizedBox(height: blkHorSize * 4),
 
-              // calendar
+// calendar
               Text(
                 'Update available session dates.',
                 style: kPoppinsMedium,
@@ -847,16 +847,24 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           width: 300,
           child: Material(
-            child: TextField(
-              enableSuggestions: true,
+            child: TextFormField(
               keyboardType: inputType ?? inputType,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(maxLength),
-              ],
               controller: controller,
+              inputFormatters: [LengthLimitingTextInputFormatter(maxLength)],
+              initialValue: 'add goal',
               decoration: InputDecoration(
-                border: InputBorder.none,
                 hintText: hintText,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                    color: Colors.green,
+                    width: 2.0,
+                  ),
+                ),
+                labelText: 'Goal',
+                suffixIcon: Icon(
+                  Icons.error,
+                ),
               ),
             ),
           ),
