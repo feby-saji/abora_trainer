@@ -20,9 +20,10 @@ import 'package:http/http.dart' show get;
 int lastDay = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
 List<DateTime> specialDates = [];
 List<DateTime> blackOutDates = [
-  DateTime.now().add(const Duration(days: 2)),
-  DateTime.now().add(const Duration(days: 1)),
+//   DateTime.now().add(const Duration(days: 2)),
+//   DateTime.now().add(const Duration(days: 1)),
 ];
+bool adPosted = false;
 
 String userName = '';
 String specializeIn = '';
@@ -35,7 +36,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  String AdPostState = 'Post AD';
   String imgPath = '';
   late SharedPreferences prefs;
   int currentBookings = 0;
@@ -68,6 +68,11 @@ class HomeScreenState extends State<HomeScreen> {
       userName = await DbServices().getUserName();
       specializeIn = await DbServices().getSpecializeIn();
       await DbServices().getAvailableSessions();
+      await DbServices().getAdPosted().then((value) {
+        setState(() {
+          adPosted = value;
+        });
+      });
       setState(() {});
       displayshowCase();
       await DbServices().fillDocSnap();
@@ -107,6 +112,7 @@ class HomeScreenState extends State<HomeScreen> {
     SizeConfig().init(context);
     final blkVerSize = SizeConfig.blockSizeVertical!;
     final blkHorSize = SizeConfig.blockSizeHorizontal!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -255,7 +261,7 @@ class HomeScreenState extends State<HomeScreen> {
                   ))),
                   onPressed: () => postAd(),
                   child: Text(
-                    AdPostState,
+                    adPosted ? 'AD is live' : 'post AD',
                     style: kPoppinsMedium.copyWith(color: Colors.white),
                   ),
                 ),
@@ -347,12 +353,15 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   postAd() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
     DocumentSnapshot docSnap =
         await DbServices().trainersCollection.doc(DbServices().uid).get();
     if (docSnap['adPostable'] == true) {
       setState(() {
-        AdPostState = 'AD is live now';
+        adPosted = true;
       });
+      await sharedPref.setBool('adPosted', true);
+
       await DbServices()
           .trainersCollection
           .doc(DbServices().uid)

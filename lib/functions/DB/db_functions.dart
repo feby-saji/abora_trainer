@@ -32,15 +32,15 @@ class DbServices {
     }
   }
 
-  Future<String> getAdPosted() async {
+  Future<bool> getAdPosted() async {
     if (docSnap == null) {
       await fillDocSnap();
     }
     sharedPref ??= await SharedPreferences.getInstance();
-    if (sharedPref!.getString(SharedPrefVal().adPosted) != null) {
-      return sharedPref!.getString(SharedPrefVal().adPosted)!;
+    if (sharedPref!.getBool('adPosted') != null) {
+      return sharedPref!.getBool('adPosted')!;
     } else {
-      sharedPref!.setString(SharedPrefVal().adPosted, docSnap!['adPosted']);
+      sharedPref!.setBool('adPosted', docSnap!['adPosted']);
       return docSnap!['adPosted'];
     }
   }
@@ -204,8 +204,7 @@ class DbServices {
     });
     await sharedPref!.setString(SharedPrefVal().bio, bio);
     await sharedPref!.setString(SharedPrefVal().area, area);
-    await sharedPref!
-        .setString(SharedPrefVal().sessionPrice, sessionPrice.text);
+    await sharedPref!.setString(SharedPrefVal().sessionPrice, sessionPrice);
     await sharedPref!.setString(SharedPrefVal().specializeIn, specializeIn);
     await sharedPref!.setBool(SharedPrefVal().gym, gym);
     await sharedPref!.setBool(SharedPrefVal().home, home);
@@ -229,6 +228,7 @@ class DbServices {
       adPosted: false,
       adPostable: false,
       createdOn: DateTime.now(),
+      uid: FirebaseAuth.instance.currentUser!.uid,
     );
     await trainersCollection.doc(uid).set(newTrainer.toMap());
   }

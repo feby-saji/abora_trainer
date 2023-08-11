@@ -399,6 +399,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         blockSize: blkHorSize,
                         maxLength: 200,
                         hintText: 'add bio',
+                        labeltext: 'Bio',
                         particulatVar: 'bio',
                       );
                     }),
@@ -431,6 +432,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             blockSize: blkHorSize,
                             maxLength: 8,
                             hintText: 'Price per session',
+                            labeltext: 'price per session',
                             particulatVar: 'sessionPrice');
                       });
                 },
@@ -814,6 +816,7 @@ class _ProfilePageState extends State<ProfilePage> {
     required blockSize,
     required hintText,
     required String particulatVar,
+    required String labeltext,
   }) {
     return SizedBox(
       width: width,
@@ -841,7 +844,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 2.0,
                   ),
                 ),
-                labelText: 'Goal',
+                labelText: labeltext,
               ),
             ),
           ),

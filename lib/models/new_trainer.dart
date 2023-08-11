@@ -12,6 +12,7 @@ class NewTrainer {
   bool adPosted;
   bool adPostable;
   DateTime createdOn;
+  String uid;
 
   NewTrainer({
     required this.name,
@@ -27,6 +28,7 @@ class NewTrainer {
     required this.adPosted,
     required this.adPostable,
     required this.createdOn,
+    required this.uid,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +46,7 @@ class NewTrainer {
       "adPostable": adPostable,
       "adPosted": adPosted,
       "createdOn": createdOn,
+      "uid": uid,
     };
   }
 }

@@ -71,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(
                     'assets/images/abora_logo.png',
-                    width: blockSize * 50,
-                    height: blockSize * 50,
+                    width: isNewUser ? blockSize * 30 : blockSize * 40,
+                    height: isNewUser ? blockSize * 30 : blockSize * 40,
                   ),
                 ),
                 SizedBox(height: blockSize * 3),
@@ -306,7 +306,7 @@ createUserWithEmail(BuildContext context) async {
       navigator.pop();
     } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await DbServices().addNewTrainer(userNameCtrl.text);
+      await DbServices().addNewTrainer(userNameCtrl.text.toLowerCase());
       await prefs.setBool(SharedPrefVal().userLoggedIn, true);
       Future.delayed(const Duration(seconds: 2), () {
         Get.to(() => ShowCaseWidget(
@@ -404,8 +404,8 @@ Future<UserCredential> signInWithGoogle(BuildContext context) async {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
   if (authResult.additionalUserInfo!.isNewUser) {
-    await DbServices()
-        .addNewTrainer(FirebaseAuth.instance.currentUser!.displayName);
+    await DbServices().addNewTrainer(
+        FirebaseAuth.instance.currentUser!.displayName?.toLowerCase());
     Future.delayed(const Duration(seconds: 2), () {
       Get.to(() => ShowCaseWidget(
           builder: Builder(builder: (context) => const HomeScreen())));

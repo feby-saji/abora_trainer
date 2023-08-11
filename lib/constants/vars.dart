@@ -13,5 +13,4 @@ class SharedPrefVal {
   String displayShowCaseHome = 'DISPLAY_SHOWCASE_HOME   ';
   String displayShowCaseProfile = 'DISPLAY_SHOWCASE_PROFILE';
   String profilePic = 'PROFILE_PIC';
-  String adPosted = 'AD_POSTED';
 }
